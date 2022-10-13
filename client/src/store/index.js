@@ -196,6 +196,28 @@ export const useGlobalStore = () => {
         tps.doTransaction();
     }
 
+    store.createNewList = function () {
+        let playlist = {"name": "Untitled" , "songs": []};
+        //playlist = JSON.parse(playlist);
+        async function asyncCreateNewList(playlist){
+            console.log(playlist);
+            let response = await api.createPlaylist(playlist);
+            if(response.data.success){
+                if(response.data.success){
+                    storeReducer({
+                        type: GlobalStoreActionType.CREATE_NEW_LIST,
+                        payload: playlist
+                    });
+                    store.history.push("/playlist/" + playlist);
+                }
+            }
+            else {
+                console.log("API FAILED TO MAKE LIST");
+            }
+        }
+        asyncCreateNewList(playlist);
+    }
+
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setlistNameActive = function () {
         storeReducer({
