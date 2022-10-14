@@ -87,9 +87,34 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+updatePlaylist = async (req, res) => {
+    const body = req.body
+    Playlist.findOne({_id: req.params.id}, (err, playlist) => {
+        playlist.name = body.name
+        playlist.modified = new Date().toGMTString()
+
+        playlist
+            .save()
+            .then(() => {
+                return res.status(200).json({
+                    success: true,
+                    id: playlist._id,
+                    message: "Playlist updated!",
+                })
+            })
+            .catch(error => {
+                return res.status(404).json({
+                    error,
+                    message: "Playlist not updated!"
+                })
+            })
+    })
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    updatePlaylist,
 }

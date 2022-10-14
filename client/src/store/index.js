@@ -116,7 +116,7 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
                     response = await api.updatePlaylistById(playlist._id, playlist);
@@ -197,25 +197,22 @@ export const useGlobalStore = () => {
     }
 
     store.createNewList = function () {
-        let playlist = {"name": "Untitled" , "songs": []};
-        //playlist = JSON.parse(playlist);
-        async function asyncCreateNewList(playlist){
-            console.log(playlist);
-            let response = await api.createPlaylist(playlist);
+        let playlist = {"name": "Untitled","songs": []};
+        async function asyncCreateNewPlaylist(playlist){
+            let response = await api.createNewList(playlist);
             if(response.data.success){
                 if(response.data.success){
                     storeReducer({
                         type: GlobalStoreActionType.CREATE_NEW_LIST,
                         payload: playlist
                     });
-                    store.history.push("/playlist/" + playlist);
                 }
             }
             else {
                 console.log("API FAILED TO MAKE LIST");
             }
         }
-        asyncCreateNewList(playlist);
+        asyncCreateNewPlaylist(playlist);
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME

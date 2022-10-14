@@ -9,6 +9,7 @@ import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
 */
 const App = () => {
     return (
+        <div id="app-root">
         <Router>
             <Banner />
             <Switch>
@@ -17,6 +18,7 @@ const App = () => {
             </Switch>
             <Statusbar />
         </Router>
+        </div>
     )
 }
 
