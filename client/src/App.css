@@ -116,7 +116,7 @@ body {
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
-  grid-row: 2/3;
+  height: 40px;
 }
 
 .list-card:aria-disabled,.list-card[aria-disabled] {
@@ -129,7 +129,7 @@ body {
 .unselected-list-card:hover {
   cursor: pointer;
   background-color: var(--swatch-contrast);
-  color:white;
+  color:black;
 }
 
 .selected-list-card {

@@ -92,7 +92,6 @@ updatePlaylist = async (req, res) => {
     Playlist.findOne({_id: req.params.id}, (err, playlist) => {
         playlist.name = body.name
         playlist.modified = new Date().toGMTString()
-
         playlist
             .save()
             .then(() => {
@@ -111,10 +110,26 @@ updatePlaylist = async (req, res) => {
     })
 }
 
+deletePlaylist = async (req, res) => {
+    const body = req.body
+    Playlist.findByIdAndDelete({_id: req.params.id}, (err, playlist) => {
+        if(err){
+            return res.status(400).json({success: false, error: err})
+        }
+        if(!playlist){
+            return res
+                .status(404)
+                .json({success: false, error: 'Playlist not found!'})
+        }
+        return res.status(200).json({success: true, data: playlist})
+    }).catch(err => console.log(err))
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
     updatePlaylist,
+    deletePlaylist
 }

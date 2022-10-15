@@ -18,6 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -206,6 +207,7 @@ export const useGlobalStore = () => {
                         type: GlobalStoreActionType.CREATE_NEW_LIST,
                         payload: playlist
                     });
+                    store.history.push("/playlist/" + playlist);
                 }
             }
             else {
@@ -221,6 +223,31 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.markListForDeletion = function (id) {
+        console.log(store.idNamePairs);
+        async function markList(id){
+            let response = await api.getPlaylistById(id);
+            if(response.data.success){
+                storeReducer({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                });
+                if(window.confirm('Do you want to delete the ' + response.data.playlist.name + ' playlist?')){
+                    async function asyncDeleteList(id){
+                        let r = await api.deletePlaylistById(id);
+                        if(r.data.success){
+                            store.history.go();
+                        }
+                        else{
+                            console.log("DID NOT DELETE");
+                        } 
+                    }
+                    asyncDeleteList(id);
+                }
+            }
+        }
+        markList(id);
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
