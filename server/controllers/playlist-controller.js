@@ -91,6 +91,7 @@ updatePlaylist = async (req, res) => {
     const body = req.body
     Playlist.findOne({_id: req.params.id}, (err, playlist) => {
         playlist.name = body.name
+        playlist.songs = body.songs
         playlist.modified = new Date().toGMTString()
         playlist
             .save()

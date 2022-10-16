@@ -202,13 +202,12 @@ export const useGlobalStore = () => {
         async function asyncCreateNewPlaylist(playlist){
             let response = await api.createNewList(playlist);
             if(response.data.success){
-                if(response.data.success){
+                let newList = response.data.playlist;
                     storeReducer({
                         type: GlobalStoreActionType.CREATE_NEW_LIST,
-                        payload: playlist
+                        payload: newList
                     });
-                    store.history.push("/playlist/" + playlist);
-                }
+                    store.history.push("/playlist/" + newList._id);
             }
             else {
                 console.log("API FAILED TO MAKE LIST");
@@ -226,7 +225,6 @@ export const useGlobalStore = () => {
     }
 
     store.markListForDeletion = function (id) {
-        console.log(store.idNamePairs);
         async function markList(id){
             let response = await api.getPlaylistById(id);
             if(response.data.success){
@@ -248,6 +246,24 @@ export const useGlobalStore = () => {
             }
         }
         markList(id);
+    }
+
+    store.addSong = function (){
+        let newSong = {"title": "Untitled", "artist": "Unknown", "youTubeId": "dQw4w9WgXcQ"};
+        store.currentList.songs[store.getPlaylistSize()]=newSong;
+        console.log(store.currentList);
+        async function asyncUpdateSongs(){
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if(response.data.success){
+                console.log(store.currentList);
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
+                        payload: store.currentList
+                    });
+                    store.history.push("/playlist/"+store.currentList._id);
+                }
+        }
+        asyncUpdateSongs();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
