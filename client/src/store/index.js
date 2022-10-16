@@ -257,7 +257,7 @@ export const useGlobalStore = () => {
             if(response.data.success){
                 console.log(store.currentList);
                     storeReducer({
-                        type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
                         payload: store.currentList
                     });
                     store.history.push("/playlist/"+store.currentList._id);
