@@ -152,7 +152,7 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     listMarkedForDeletion: null,
                     songMarkedForDeletion: null,
-                    songEditActive: payload,
+                    songEditActive: payload
                 });
             }
             default:
@@ -418,9 +418,10 @@ export const useGlobalStore = () => {
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
     store.setSongEditActive = function (index) {
+        let song = store.currentList.songs[index];
         storeReducer({
             type: GlobalStoreActionType.SET_SONG_EDIT_ACTIVE,
-            payload: store.currentList.songs[index]
+            payload: song
         });
     }
 

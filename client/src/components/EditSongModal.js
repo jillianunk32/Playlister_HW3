@@ -1,54 +1,44 @@
 import React, { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store'
 
-function EditSongModal (){
+function EditSongModal(){
     const { store } = useContext(GlobalStoreContext);
-    const [ changeTitle, setChangeTitle] = useState(0);
-    const [ changeArtist, setChangeArtist] = useState(0);
-    const [ changeYoutube, setChangeYoutube] = useState(0);
 
     let songTitle = "";
     let songArtist = "";
     let songYoutube = "";
-    if(store.songEditActive!=null){
-        songTitle = store.songEditActive.title;
-        songArtist = store.songEditActive.artist;
-        songYoutube = store.songEditActive.youTubeId;
-    }
 
-    function handleConfirmEditSong(){
+    function handleConfirmEditSong(event){
         let newSongData = {
-            title: changeTitle,
-            artist: changeArtist,
-            youTubeId: changeYoutube
+            title: songTitle,
+            artist: songArtist,
+            youTubeId: songYoutube
         };
-        console.log(newSongData);
-        console.log(store.songEditActive);
         store.addEditSongTransaction(store.currentList.songs.indexOf(store.songEditActive), newSongData);
         store.hideEditSongModal();
     }
 
-    function handleCancelEditSongModal(){
+    function handleCancelEditSongModal(event){
         store.hideEditSongModal();
     }
 
     function handleUpdateTitle (event){
-        setChangeTitle(event.target.value);
+        songTitle = event.target.value;
     }
 
     function handleUpdateArtist (event){
-        setChangeArtist(event.target.value);
+        songArtist = event.target.value;
     }
 
     function handleUpdateYouTubeId (event){
-        setChangeYoutube(event.target.value);
+        songYoutube = event.target.value;
     }
 
     let modalClass = "modal";
     if(store.songEditActive!=null){
         modalClass = "modal is-visible";
     }
-
+    if(store.songEditActive!=null){
         return (
             <div
                 id="edit-song-modal"
@@ -64,11 +54,11 @@ function EditSongModal (){
                         id="edit-song-modal-content"
                         className="modal-center">
                         <div id="title-prompt" className="modal-prompt">Title:</div>
-                        <input id="edit-song-modal-title-textfield" className='modal-textfield' type="text" defaultValue={songTitle} onChange={handleUpdateTitle} />
+                        <input id="edit-song-modal-title-textfield" className='modal-textfield' type="text" defaultValue={store.songEditActive.title} onChange={handleUpdateTitle} />
                         <div id="artist-prompt" className="modal-prompt">Artist:</div>
-                        <input id="edit-song-modal-artist-textfield" className='modal-textfield' type="text" defaultValue={songArtist} onChange={handleUpdateArtist} />
+                        <input id="edit-song-modal-artist-textfield" className='modal-textfield' type="text" defaultValue={store.songEditActive.artist} onChange={handleUpdateArtist} />
                         <div id="you-tube-id-prompt" className="modal-prompt">You Tube Id:</div>
-                        <input id="edit-song-modal-youTubeId-textfield" className='modal-textfield' type="text" defaultValue={songYoutube} onChange={handleUpdateYouTubeId} />
+                        <input id="edit-song-modal-youTubeId-textfield" className='modal-textfield' type="text" defaultValue={store.songEditActive.youTubeId} onChange={handleUpdateYouTubeId} />
                     </div>
                     <div className="modal-close" id="confirm-cancel-container">
                         <input type="button" id="edit-song-confirm-button" className="modal-button" value='Confirm' onClick={handleConfirmEditSong} />
@@ -78,5 +68,9 @@ function EditSongModal (){
             </div>
         );
     }
+    else{
+        return null;
+    }
+}
 
 export default EditSongModal;

@@ -41,7 +41,6 @@ function SongCard(props) {
     }
     function handleEditSong(event){
         if(event.detail===2){
-            console.log(props.index);
             store.setSongEditActive(props.index);
         }
     }
