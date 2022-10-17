@@ -402,7 +402,6 @@ export const useGlobalStore = () => {
 
     store.deleteMarkedSong = function (index){
         let list = store.currentList;
-        console.log("index " + index);
         list.songs.splice(index, 1);
         async function asyncUpdateSongs(){
             let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
@@ -421,7 +420,7 @@ export const useGlobalStore = () => {
     store.setSongEditActive = function (index) {
         storeReducer({
             type: GlobalStoreActionType.SET_SONG_EDIT_ACTIVE,
-            payload: this.currentList.songs[index]
+            payload: store.currentList.songs[index]
         });
     }
 
@@ -449,6 +448,17 @@ export const useGlobalStore = () => {
                 }
         }
         asyncUpdateSongs();
+    }
+
+    store.addEditSongTransaction = function (index, newSong){
+        let song = store.currentList.songs[index];
+        let oldSong ={
+            title: song.title,
+            artist: song.artist,
+            youTubeId: song.youTubeId
+        };
+        let transaction = new EditSong_Transaction(store, index, oldSong, newSong);
+        tps.addTransaction(transaction);
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

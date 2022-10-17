@@ -3,33 +3,32 @@ import { GlobalStoreContext } from '../store'
 
 function EditSongModal (){
     const { store } = useContext(GlobalStoreContext);
-    const [ changeTitle, setChangeTitle] = useState(false);
-    const [ changeArtist, setChangeArtist] = useState(false);
-    const [ changeYoutube, setChangeYoutube] = useState(false);
+    const [ changeTitle, setChangeTitle] = useState(0);
+    const [ changeArtist, setChangeArtist] = useState(0);
+    const [ changeYoutube, setChangeYoutube] = useState(0);
 
     let songTitle = "";
     let songArtist = "";
     let songYoutube = "";
-    if(store.songEditActive){
+    if(store.songEditActive!=null){
         songTitle = store.songEditActive.title;
         songArtist = store.songEditActive.artist;
         songYoutube = store.songEditActive.youTubeId;
-
     }
 
-    function handleConfirmEditSong (event){
-        
+    function handleConfirmEditSong(){
         let newSongData = {
             title: changeTitle,
             artist: changeArtist,
             youTubeId: changeYoutube
         };
         console.log(newSongData);
-        store.editSong(store.currentList.songs.indexOf(store.songEditActive), newSongData);
+        console.log(store.songEditActive);
+        store.addEditSongTransaction(store.currentList.songs.indexOf(store.songEditActive), newSongData);
         store.hideEditSongModal();
     }
 
-    function handleCancelEditSongModal (event){
+    function handleCancelEditSongModal(){
         store.hideEditSongModal();
     }
 
@@ -72,7 +71,7 @@ function EditSongModal (){
                         <input id="edit-song-modal-youTubeId-textfield" className='modal-textfield' type="text" defaultValue={songYoutube} onChange={handleUpdateYouTubeId} />
                     </div>
                     <div className="modal-close" id="confirm-cancel-container">
-                        <input type="button" id="edit-song-confirm-button" className="close-modal-button" value='Confirm' onClick={handleConfirmEditSong} />
+                        <input type="button" id="edit-song-confirm-button" className="modal-button" value='Confirm' onClick={handleConfirmEditSong} />
                         <input type="button" id="edit-song-cancel-button" className="close-modal-button" value='Cancel' onClick={handleCancelEditSongModal} />
                     </div>
                 </div>
