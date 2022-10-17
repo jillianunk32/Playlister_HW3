@@ -28,7 +28,7 @@ function SongCard(props) {
         let targetIndex = props.index;
         let sourceIndex = Number(event.dataTransfer.getData("song"));
         setDraggedTo(false);
-        store.moveSong(targetIndex, sourceIndex);
+        store.addMoveSongTransaction(targetIndex, sourceIndex);
     }
 
     const { song, index } = props;

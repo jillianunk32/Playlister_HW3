@@ -1,7 +1,8 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
-// import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js'
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js'
+// import AddSong_Transaction from '../transactions/AddSong_Transaction';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -249,6 +250,11 @@ export const useGlobalStore = () => {
         markList(id);
     }
 
+    // store.addAddSongTransaction = function (start, end){
+    //     let transaction = new AddSong_Transaction(store, start, end);
+    //     tps.addTransaction(transaction);
+    // }
+
     store.addSong = function (){
         let newSong = {"title": "Untitled", "artist": "Unknown", "youTubeId": "dQw4w9WgXcQ"};
         store.currentList.songs[store.getPlaylistSize()]=newSong;
@@ -265,10 +271,10 @@ export const useGlobalStore = () => {
         asyncUpdateSongs();
     }
 
-    // store.addMoveSongTransaction = function (start, end){
-    //     let transaction = new MoveSong_Transaction(store, start, end);
-    //     tps.addTransaction(transaction);
-    // }
+    store.addMoveSongTransaction = function (start, end){
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
+    }
 
     store.moveSong = function (end, start){
         let list = store.currentList;
@@ -294,12 +300,13 @@ export const useGlobalStore = () => {
                         payload: store.currentList
                     });
                     store.history.push("/playlist/"+store.currentList._id);
-                    
                 }
         }
         asyncUpdateSongs();
 
     }
+
+    
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
