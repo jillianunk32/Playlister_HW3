@@ -37,7 +37,7 @@ function SongCard(props) {
         event.stopPropagation();
         let song = event.target.id;
         song = ("" + song).substring("remove-song-".length)
-        setSongMarked(true);
+        setSongMarked(store.currentList.songs[song]);
         store.markSongForDeletion(song);
     }
     function handleEditSong(event){

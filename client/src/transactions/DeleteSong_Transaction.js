@@ -18,10 +18,12 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.store.deleteSong(this.index);
+        this.store.deleteMarkedSong(this.index);
     }
     
     undoTransaction() {
-        this.store.addSong(this.index, this.song);
+        console.log(this.index);
+        console.log(this.song);
+        this.store.addSong(this.index, this.song.title, this.song.artist, this.song.youTubeId);
     }
 }

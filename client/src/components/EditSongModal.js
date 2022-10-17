@@ -3,9 +3,9 @@ import { GlobalStoreContext } from '../store'
 
 function EditSongModal (){
     const { store } = useContext(GlobalStoreContext);
-    const [ changeTitle, setChangeTitle] = useState(0);
-    const [ changeArtist, setChangeArtist] = useState(0);
-    const [ changeYoutube, setChangeYoutube] = useState(0);
+    const [ changeTitle, setChangeTitle] = useState(false);
+    const [ changeArtist, setChangeArtist] = useState(false);
+    const [ changeYoutube, setChangeYoutube] = useState(false);
 
     let songTitle = "";
     let songArtist = "";
@@ -26,6 +26,7 @@ function EditSongModal (){
         };
         console.log(newSongData);
         store.editSong(store.currentList.songs.indexOf(store.songEditActive), newSongData);
+        store.hideEditSongModal();
     }
 
     function handleCancelEditSongModal (event){

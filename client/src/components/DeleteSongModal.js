@@ -10,7 +10,7 @@ function DeleteSongModal(){
     }
 
     function handleConfirmRemoveSong (event){
-        store.deleteMarkedSong();
+        store.addDeleteSongTransaction(store.currentList.songs.indexOf(store.songMarkedForDeletion), store.songMarkedForDeletion);
         store.hideDeleteSongModal();
     }
 
