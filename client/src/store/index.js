@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+// import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js'
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -251,11 +252,9 @@ export const useGlobalStore = () => {
     store.addSong = function (){
         let newSong = {"title": "Untitled", "artist": "Unknown", "youTubeId": "dQw4w9WgXcQ"};
         store.currentList.songs[store.getPlaylistSize()]=newSong;
-        console.log(store.currentList);
         async function asyncUpdateSongs(){
             let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
             if(response.data.success){
-                console.log(store.currentList);
                     storeReducer({
                         type: GlobalStoreActionType.SET_CURRENT_LIST,
                         payload: store.currentList
@@ -264,6 +263,42 @@ export const useGlobalStore = () => {
                 }
         }
         asyncUpdateSongs();
+    }
+
+    // store.addMoveSongTransaction = function (start, end){
+    //     let transaction = new MoveSong_Transaction(store, start, end);
+    //     tps.addTransaction(transaction);
+    // }
+
+    store.moveSong = function (end, start){
+        let list = store.currentList;
+        if (start < end) {
+            let temp = list.songs[start];
+            for (let i = start; i < end; i++) {
+                list.songs[i] = list.songs[i + 1];
+            }
+            list.songs[end] = temp;
+        }
+        else if (start > end) {
+            let temp = list.songs[start];
+            for (let i = start; i > end; i--) {
+                list.songs[i] = list.songs[i - 1];
+            }
+            list.songs[end] = temp;
+        }
+        async function asyncUpdateSongs(){
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if(response.data.success){
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
+                        payload: store.currentList
+                    });
+                    store.history.push("/playlist/"+store.currentList._id);
+                    
+                }
+        }
+        asyncUpdateSongs();
+
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
