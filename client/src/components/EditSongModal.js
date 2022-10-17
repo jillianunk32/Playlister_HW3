@@ -1,16 +1,31 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { GlobalStoreContext } from '../store'
 
 function EditSongModal (){
     const { store } = useContext(GlobalStoreContext);
+    const [ changeTitle, setChangeTitle] = useState(0);
+    const [ changeArtist, setChangeArtist] = useState(0);
+    const [ changeYoutube, setChangeYoutube] = useState(0);
+
+    let songTitle = "";
+    let songArtist = "";
+    let songYoutube = "";
+    if(store.songEditActive){
+        songTitle = store.songEditActive.title;
+        songArtist = store.songEditActive.artist;
+        songYoutube = store.songEditActive.youTubeId;
+
+    }
 
     function handleConfirmEditSong (event){
+        
         let newSongData = {
-            title: this.state.title,
-            artist: this.state.artist,
-            youTubeId: this.state.youTubeId
+            title: changeTitle,
+            artist: changeArtist,
+            youTubeId: changeYoutube
         };
-        store.updateSong(this.props.songIndex, newSongData);
+        console.log(newSongData);
+        store.editSong(store.currentList.songs.indexOf(store.songEditActive), newSongData);
     }
 
     function handleCancelEditSongModal (event){
@@ -18,47 +33,46 @@ function EditSongModal (){
     }
 
     function handleUpdateTitle (event){
-        this.setState(
-            { title: event.target.value }
-        );
+        setChangeTitle(event.target.value);
     }
 
     function handleUpdateArtist (event){
-        this.setState(
-            { artist: event.target.value }
-        );
+        setChangeArtist(event.target.value);
     }
 
     function handleUpdateYouTubeId (event){
-        this.setState(
-            { youTubeId: event.target.value }
-        );
+        setChangeYoutube(event.target.value);
+    }
+
+    let modalClass = "modal";
+    if(store.songEditActive!=null){
+        modalClass = "modal is-visible";
     }
 
         return (
             <div
                 id="edit-song-modal"
-                className="modal"
+                className={modalClass}
                 data-animation="slideInOutLeft">
                 <div
                     id='edit-song-root'
-                    className="modal-root">
+                    className="modal-dialog">
                     <div
                         id="edit-song-modal-header"
-                        className="modal-north">Edit Song</div>
+                        className="dialog-header">Edit Song</div>
                     <div
                         id="edit-song-modal-content"
                         className="modal-center">
                         <div id="title-prompt" className="modal-prompt">Title:</div>
-                        <input id="edit-song-modal-title-textfield" className='modal-textfield' type="text" defaultValue={""} onChange={handleUpdateTitle} />
+                        <input id="edit-song-modal-title-textfield" className='modal-textfield' type="text" defaultValue={songTitle} onChange={handleUpdateTitle} />
                         <div id="artist-prompt" className="modal-prompt">Artist:</div>
-                        <input id="edit-song-modal-artist-textfield" className='modal-textfield' type="text" defaultValue={""} onChange={handleUpdateArtist} />
+                        <input id="edit-song-modal-artist-textfield" className='modal-textfield' type="text" defaultValue={songArtist} onChange={handleUpdateArtist} />
                         <div id="you-tube-id-prompt" className="modal-prompt">You Tube Id:</div>
-                        <input id="edit-song-modal-youTubeId-textfield" className='modal-textfield' type="text" defaultValue={""} onChange={handleUpdateYouTubeId} />
+                        <input id="edit-song-modal-youTubeId-textfield" className='modal-textfield' type="text" defaultValue={songYoutube} onChange={handleUpdateYouTubeId} />
                     </div>
-                    <div className="modal-south">
-                        <input type="button" id="edit-song-confirm-button" className="modal-button" value='Confirm' onClick={handleConfirmEditSong} />
-                        <input type="button" id="edit-song-cancel-button" className="modal-button" value='Cancel' onClick={handleCancelEditSongModal} />
+                    <div className="modal-close" id="confirm-cancel-container">
+                        <input type="button" id="edit-song-confirm-button" className="close-modal-button" value='Confirm' onClick={handleConfirmEditSong} />
+                        <input type="button" id="edit-song-cancel-button" className="close-modal-button" value='Cancel' onClick={handleCancelEditSongModal} />
                     </div>
                 </div>
             </div>

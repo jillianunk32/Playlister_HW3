@@ -39,7 +39,7 @@ function DeleteListModal(){
                         </div>
                     </div>
                     <div className="modal-close" id="confirm-cancel-container">
-                        <input type="button" id="remove-list-confirm-button" className="modal-button" onClick={handleConfirmRemoveList} value='Confirm' />
+                        <input type="button" id="remove-list-confirm-button" className="close-modal-button" onClick={handleConfirmRemoveList} value='Confirm' />
                         <input type="button" id="remove-list-cancel-button" className="close-modal-button" onClick={handleCancelRemoveList} value='Cancel' />
                     </div>
                 </div>

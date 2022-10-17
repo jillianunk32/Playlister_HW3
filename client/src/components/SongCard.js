@@ -6,6 +6,7 @@ function SongCard(props) {
     const [ draggedTo, setDraggedTo ] = useState(0);
     const [ songMarked, setSongMarked ] = useState(false);
     const { song, index } = props;
+    const [editActiveSong, setEditActiveSong] = useState(false);
 
     function handleDragStart(event){
         event.dataTransfer.setData("song", props.index);
@@ -39,6 +40,16 @@ function SongCard(props) {
         setSongMarked(true);
         store.markSongForDeletion(song);
     }
+    function handleEditSong(event){
+        if(event.detail===2){
+            let newActive = !editActiveSong;
+            if (newActive) {
+                console.log(props.index);
+                store.setSongEditActive(props.index);
+            }
+            setEditActiveSong(newActive);
+        }
+    }
 
     let cardClass = "list-card unselected-list-card";
     if(draggedTo){
@@ -57,6 +68,7 @@ function SongCard(props) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={handleEditSong}
             draggable="true"
         >
             {index + 1}.

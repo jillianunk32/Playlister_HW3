@@ -20,7 +20,6 @@ function DeleteSongModal(){
 
     let modalClass = "modal";
     if(store.songMarkedForDeletion!=null){
-        console.log(store.currentList);
         modalClass = "modal is-visible";
     }
 
@@ -39,7 +38,7 @@ function DeleteSongModal(){
                         </div>
                     </div>
                     <div className="modal-close" id ="confirm-cancel-container">
-                        <input type="button" id="remove-song-confirm-button" className="modal-button" onClick={handleConfirmRemoveSong} value='Confirm' />
+                        <input type="button" id="remove-song-confirm-button" className="close-modal-button" onClick={handleConfirmRemoveSong} value='Confirm' />
                         <input type="button" id="remove-song-cancel-button" className="close-modal-button" onClick={handleCancelRemoveSong} value='Cancel' />
                     </div>
                 </div>

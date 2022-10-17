@@ -21,7 +21,8 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
-    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION",
+    SET_SONG_EDIT_ACTIVE: "SET_SONG_EDIT_ACTIVE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -37,7 +38,8 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         listMarkedForDeletion: null,
-        songMarkedForDeletion: false
+        songMarkedForDeletion: false,
+        songEditActive: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -116,6 +118,15 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     songMarkedForDeletion: payload
+                });
+            }
+            case GlobalStoreActionType.SET_SONG_EDIT_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    songEditActive: payload
                 });
             }
             default:
@@ -347,6 +358,40 @@ export const useGlobalStore = () => {
         let list = store.currentList;
         let index = list.songs.indexOf(store.songMarkedForDeletion);
         list.songs.splice(index, 1);
+        async function asyncUpdateSongs(){
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if(response.data.success){
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
+                        payload: store.currentList
+                    });
+                    store.history.push("/playlist/"+store.currentList._id);
+                }
+        }
+        asyncUpdateSongs();
+    }
+
+    // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
+    store.setSongEditActive = function (index) {
+        storeReducer({
+            type: GlobalStoreActionType.SET_SONG_EDIT_ACTIVE,
+            payload: this.currentList.songs[index]
+        });
+    }
+
+    store.hideEditSongModal = function (){
+        storeReducer({
+            type: GlobalStoreActionType.SET_SONG_EDIT_ACTIVE,
+            payload: null
+        });
+    }
+
+    store.editSong = function (index, newSong){
+        let list = store.currentList;
+        let song = list.songs[index];
+        song.title = newSong.title;
+        song.artist = newSong.artist;
+        song.youTubeId = newSong.youTubeId;
         async function asyncUpdateSongs(){
             let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
             if(response.data.success){
