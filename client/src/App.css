@@ -168,6 +168,7 @@ input {
   bottom: 0;
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   padding: 1rem;
   background: var(--black);
@@ -177,6 +178,9 @@ input {
   opacity: 0;
   transition: all 0.35s ease-in;
   font-family: var(--font-primary);
+  border-color: black;
+  border-style: solid;
+  box-shadow: 5px 10px #888888;
 }
 
 .modal.is-visible {
@@ -228,6 +232,7 @@ input {
 
 .dialog-header {
   font-size: 24pt;
+  background-color: #669966;
 }
 
 #close-modal-button {
