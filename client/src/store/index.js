@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
-import api from '../api'
+import api, { getAllPlaylists } from '../api'
 import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js'
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
 import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction'
@@ -332,17 +332,7 @@ export const useGlobalStore = () => {
             youTubeId: youTubeId
         };
         store.currentList.songs.splice(index, 0, newSong);
-        async function asyncUpdateSongs(){
-            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
-            if(response.data.success){
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: store.currentList
-                    });
-                    store.history.push("/playlist/"+store.currentList._id);
-                }
-        }
-        asyncUpdateSongs();
+        store.updatePlaylist();
     }
 
     store.addMoveSongTransaction = function (start, end){
@@ -366,18 +356,7 @@ export const useGlobalStore = () => {
             }
             list.songs[end] = temp;
         }
-        async function asyncUpdateSongs(){
-            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
-            if(response.data.success){
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: store.currentList
-                    });
-                    store.history.push("/playlist/"+store.currentList._id);
-                }
-        }
-        asyncUpdateSongs();
-
+       store.updatePlaylist();
     }
 
     store.addDeleteSongTransaction = function (index, song){
@@ -403,17 +382,7 @@ export const useGlobalStore = () => {
     store.deleteMarkedSong = function (index){
         let list = store.currentList;
         list.songs.splice(index, 1);
-        async function asyncUpdateSongs(){
-            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
-            if(response.data.success){
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: store.currentList
-                    });
-                    store.history.push("/playlist/"+store.currentList._id);
-                }
-        }
-        asyncUpdateSongs();
+        store.updatePlaylist();
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
@@ -438,17 +407,7 @@ export const useGlobalStore = () => {
         song.title = newSong.title;
         song.artist = newSong.artist;
         song.youTubeId = newSong.youTubeId;
-        async function asyncUpdateSongs(){
-            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
-            if(response.data.success){
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: store.currentList
-                    });
-                    store.history.push("/playlist/"+store.currentList._id);
-                }
-        }
-        asyncUpdateSongs();
+        store.updatePlaylist();
     }
 
     store.addEditSongTransaction = function (index, newSong){
@@ -460,6 +419,20 @@ export const useGlobalStore = () => {
         };
         let transaction = new EditSong_Transaction(store, index, oldSong, newSong);
         tps.addTransaction(transaction);
+    }
+
+    store.updatePlaylist = function (){
+        async function asyncUpdateSongs(){
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if(response.data.success){
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
+                        payload: store.currentList
+                    });
+                    store.history.push("/playlist/"+store.currentList._id);
+                }
+        }
+        asyncUpdateSongs();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
