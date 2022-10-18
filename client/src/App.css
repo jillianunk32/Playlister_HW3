@@ -53,21 +53,25 @@ body {
   border-width: 2px;
   border-style: solid;
   border-radius: 10px;
+  text-align: center;
 }
 
 #edit-toolbar {
   grid-column: 2 / 3;
-  grid-row: 1 / 2;
+  grid-row: 2 / 3;
   background-color: transparent;
   float:right;
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
 }
 
 #playlist-selector, #playlist-cards {
   overflow: scroll;
   grid-column: 1 / 3;
   grid-row: 2 / 3;
-  display:grid;
-  background-color: var(--swatch-primary);
+  display: grid;
+  background-color: var(--swatch-accent);
 }
 
 #playlist-selector, #text{

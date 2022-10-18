@@ -12,9 +12,7 @@ function EditToolbar() {
     const history = useHistory();
 
     let enabledButtonClass = "playlister-button";
-    if(store.currentList==null){
-        enabledButtonClass="playlister-button disabled";
-    }
+    let disabledButtonClass = "playlister-button-disabled";
 
     function handleUndo() {
         store.undo();
@@ -30,17 +28,17 @@ function EditToolbar() {
         store.createNewSong();
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.listNameActive || store.songEditActive) {
         editStatus = true;
     }
     return (
-        <span id="edit-toolbar">
+        <div id="edit-toolbar">
             <input
                 type="button"
                 id='add-song-button'
                 disabled={editStatus}
                 value="+"
-                className={enabledButtonClass}
+                className={(store.currentList!=null && !editStatus) ? enabledButtonClass : disabledButtonClass}
                 onClick={handleAddSong}
             />
             <input
@@ -48,7 +46,7 @@ function EditToolbar() {
                 id='undo-button'
                 disabled={editStatus}
                 value="⟲"
-                className={enabledButtonClass}
+                className={(store.tps.hasTransactionToUndo() && !editStatus) ? enabledButtonClass : disabledButtonClass}
                 onClick={handleUndo}
             />
             <input
@@ -56,7 +54,7 @@ function EditToolbar() {
                 id='redo-button'
                 disabled={editStatus}
                 value="⟳"
-                className={enabledButtonClass}
+                className={(store.tps.hasTransactionToRedo() && !editStatus) ? enabledButtonClass : disabledButtonClass}
                 onClick={handleRedo}
             />
             <input
@@ -64,10 +62,10 @@ function EditToolbar() {
                 id='close-button'
                 disabled={editStatus}
                 value="&#x2715;"
-                className={enabledButtonClass}
+                className={(store.currentList!=null && !editStatus) ? enabledButtonClass : disabledButtonClass}
                 onClick={handleClose}
             />
-        </span>);
+        </div>);
 }
 
 export default EditToolbar;
