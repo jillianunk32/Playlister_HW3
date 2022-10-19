@@ -28,7 +28,7 @@ function EditToolbar() {
         store.createNewSong();
     }
     let editStatus = false;
-    if (store.listNameActive || store.songEditActive) {
+    if (store.listNameActive || store.songEditActive || store.songMarkedForDeletion) {
         editStatus = true;
     }
     return (

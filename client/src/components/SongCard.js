@@ -49,9 +49,6 @@ function SongCard(props) {
     if(draggedTo){
         cardClass = "list-card selected-list-card";
     }
-    if(songMarked===store.songMarkedForDeletion){
-        cardClass = "list-card selected-list-card";
-    }
     return (
         <div
             key={index}
