@@ -1,15 +1,29 @@
 import './App.css';
-import { React } from 'react'
+import  React, {useContext} from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
+import { GlobalStoreContext } from './store';
 /*
     This is our application's top-level component.
     
     @author McKilla Gorilla
 */
 const App = () => {
+    const {store} = useContext(GlobalStoreContext);
+    function handleKeyDown(event){
+        if(event.key==="z" && event.ctrlKey){
+            if (store.tps.hasTransactionToUndo()) {
+                store.undo();
+            }
+        }
+        else if(event.key==="y" && event.ctrlKey){
+            if (store.tps.hasTransactionToRedo()) {
+                store.redo();
+            }
+        }
+    }
     return (
-        <div id="app-root">
+        <div id="app-root" onKeyDown={handleKeyDown}>
         <Router>
             <Banner />
             <Switch>
