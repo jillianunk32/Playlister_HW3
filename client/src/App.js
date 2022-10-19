@@ -24,6 +24,7 @@ const App = () => {
     }
     return (
         <div id="app-root" onKeyDown={handleKeyDown}>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine"></link> 
         <Router>
             <Banner />
             <Switch>
