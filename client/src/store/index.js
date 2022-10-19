@@ -182,12 +182,12 @@ export const useGlobalStore = () => {
                 let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
-                    response = await api.updatePlaylistById(playlist._id, playlist);
-                    if (response.data.success) {
+                    let res = await api.updatePlaylistById(playlist._id, playlist);
+                    if (res.data.success) {
                         async function getListPairs(playlist) {
-                            response = await api.getPlaylistPairs();
-                            if (response.data.success) {
-                                let pairsArray = response.data.idNamePairs;
+                            let r = await api.getPlaylistPairs();
+                            if (r.data.success) {
+                                let pairsArray = r.data.idNamePairs;
                                 storeReducer({
                                     type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                     payload: {
@@ -195,6 +195,11 @@ export const useGlobalStore = () => {
                                         playlist: playlist
                                     }
                                 });
+                                storeReducer({
+                                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                                    payload: null
+                                });
+                                store.loadIdNamePairs();
                             }
                         }
                         getListPairs(playlist);
@@ -203,7 +208,7 @@ export const useGlobalStore = () => {
                 updateList(playlist);
             }
         }
-        asyncChangeListName(id);
+        asyncChangeListName(id); 
     }
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
